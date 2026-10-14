@@ -31,7 +31,7 @@ gradle wrapper
 
 Sin keystore propio, `release` se firma con la clave de debug. Para firmar de verdad define `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` y `KEY_PASSWORD`.
 
-**En GitHub Actions** (`.github/workflows/build.yml`): cada push a `main` genera la APK como artefacto, y cada tag `v*` la publica en Releases. Para firmar con tu clave crea los secretos `KEYSTORE_B64` (el `.jks` en base64), `KEYSTORE_PASSWORD`, `KEY_ALIAS` y `KEY_PASSWORD`. Mantén siempre la misma clave: si cambia, no podrás actualizar encima.
+**En GitHub Actions** (`.github/workflows/build.yml`): cada push a `main` genera la APK como artefacto, y cada tag `v*` la publica en Releases. Para firmar con tu clave crea los secretos `KEYSTORE_B64` (el `.jks` en base64), `KEYSTORE_PASS`, `KEY_ALIAS` y `KEY_PASS` (los mismos nombres que usa OpGram). Mantén siempre la misma clave: si cambia, no podrás actualizar encima.
 
 ## Notas y límites
 

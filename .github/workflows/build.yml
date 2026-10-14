@@ -28,7 +28,7 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      # Firma opcional: crea los 4 secretos en el repo (KEYSTORE_B64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD).
+      # Firma opcional con los mismos secretos que OpGram: KEYSTORE_B64, KEYSTORE_PASS, KEY_PASS y KEY_ALIAS.
       # Sin ellos se firma con la clave de debug (cambiará en cada ejecución: no sirve para actualizar encima).
       - name: Preparar keystore
         env:
@@ -41,9 +41,9 @@ jobs:
 
       - name: Compilar release
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASS }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASS }}
         run: gradle :app:assembleRelease --no-daemon
 
       - uses: actions/upload-artifact@v4
