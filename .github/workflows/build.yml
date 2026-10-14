@@ -21,8 +21,12 @@ jobs:
       # El runner ya trae el SDK de Android; solo aseguramos licencias, plataforma y build-tools.
       - name: Preparar Android SDK
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          SDKM=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -n1 || true)
+          echo "sdkmanager: ${SDKM:-no encontrado}"
+          if [ -n "$SDKM" ]; then
+            yes | "$SDKM" --licenses > /dev/null || true
+            "$SDKM" "platforms;android-35" "build-tools;35.0.0" || true
+          fi
 
       - uses: gradle/actions/setup-gradle@v4
         with:
