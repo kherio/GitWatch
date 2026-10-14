@@ -6,6 +6,11 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Etiqueta a publicar como release (p. ej. v0.1.0). Vacío = solo compilar"
+        required: false
+        default: ""
 
 jobs:
   build:
@@ -53,8 +58,10 @@ jobs:
         run: gradle :app:assembleRelease --no-daemon
 
       - name: Renombrar APK
+        env:
+          VERSION: ${{ inputs.release_tag || github.ref_name }}
         run: |
-          NAME="GitWatch-${GITHUB_REF_NAME//\//-}.apk"
+          NAME="GitWatch-${VERSION//\//-}.apk"
           mv app/build/outputs/apk/release/*.apk "app/build/outputs/apk/release/$NAME"
           ls -l app/build/outputs/apk/release/
 
@@ -64,10 +71,12 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
 
       - name: Publicar release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
-          name: GitWatch ${{ github.ref_name }}
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          name: GitWatch ${{ inputs.release_tag || github.ref_name }}
           files: app/build/outputs/apk/release/*.apk
           body: |
             Versión de prueba de GitWatch: vigila las releases de GitHub de tus apps y módulos root y te avisa de las actualizaciones.
